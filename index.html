@@ -1,0 +1,925 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng tương tác: Phân tích tâm lý trong Hannibal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .slider-container {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .slider-value {
+            display: inline-block;
+            width: 40px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-red-800 mb-2">Mô phỏng tương tác: Phân tích tâm lý trong Hannibal</h1>
+            <p class="text-lg text-gray-700">Khám phá mối quan hệ phức tạp giữa Will Graham và Hannibal Lecter</p>
+        </header>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Câu hỏi khám phá</h2>
+            <p class="text-lg mb-4">Làm thế nào mà một bác sĩ tâm thần như Hannibal Lecter có thể thao túng tâm lý của Will Graham và những người xung quanh mà không bị phát hiện?</p>
+            <p class="italic text-gray-600">Hãy điều chỉnh các thông số để khám phá cách thức Hannibal tác động đến tâm lý của Will và những hệ quả của nó.</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="flex mb-6">
+                <button id="tab1-btn" class="tab-btn px-4 py-2 bg-red-800 text-white rounded-tl-lg rounded-tr-lg mr-2 active">Mô hình tâm lý</button>
+                <button id="tab2-btn" class="tab-btn px-4 py-2 bg-gray-300 text-gray-800 rounded-tl-lg rounded-tr-lg mr-2">Phân tích nhân vật</button>
+                <button id="tab3-btn" class="tab-btn px-4 py-2 bg-gray-300 text-gray-800 rounded-tl-lg rounded-tr-lg">Hệ thống quan hệ</button>
+            </div>
+
+            <div id="tab1-content" class="tab-content active">
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Mô hình tâm lý: Sự thao túng của Hannibal</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="font-bold mb-2">Điều chỉnh các thông số</h4>
+                        
+                        <div class="mb-4">
+                            <label class="block mb-1">Mức độ thao túng của Hannibal:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="manipulation-level" min="0" max="100" value="50" class="w-full mr-2">
+                                <span id="manipulation-value" class="slider-value">50</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block mb-1">Khả năng đồng cảm của Will:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="empathy-level" min="0" max="100" value="80" class="w-full mr-2">
+                                <span id="empathy-value" class="slider-value">80</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block mb-1">Mức độ bất ổn tâm lý của Will:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="instability-level" min="0" max="100" value="60" class="w-full mr-2">
+                                <span id="instability-value" class="slider-value">60</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block mb-1">Sự nghi ngờ của Jack Crawford:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="suspicion-level" min="0" max="100" value="30" class="w-full mr-2">
+                                <span id="suspicion-value" class="slider-value">30</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold mb-2">Kết quả mô phỏng</h4>
+                        <div class="p-4 bg-gray-100 rounded-lg">
+                            <p id="simulation-result" class="mb-4">Will Graham đang dần bị ảnh hưởng bởi sự thao túng của Hannibal. Khả năng đồng cảm cao khiến anh dễ bị tổn thương trước những chiến thuật tâm lý của Hannibal.</p>
+                            <p id="risk-level" class="font-bold text-red-600">Mức độ nguy hiểm: Trung bình cao</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4 class="font-bold mb-2">Trạng thái tâm lý của Will</h4>
+                            <div class="chart-container">
+                                <canvas id="mental-state-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-4">
+                    <h4 class="font-bold mb-2">Diễn biến tâm lý theo thời gian</h4>
+                    <div class="chart-container">
+                        <canvas id="timeline-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab2-content" class="tab-content">
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Phân tích nhân vật</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-red-800 mb-2">Hannibal Lecter</h4>
+                        <p class="mb-2">Bác sĩ tâm thần pháp y với trí tuệ siêu việt và khả năng thao túng tâm lý đáng sợ.</p>
+                        
+                        <div class="mt-4">
+                            <h5 class="font-semibold mb-1">Đặc điểm tâm lý:</h5>
+                            <ul class="list-disc pl-5 mb-3">
+                                <li>Rối loạn nhân cách phản xã hội</li>
+                                <li>Trí tuệ siêu việt</li>
+                                <li>Khả năng đọc và thao túng tâm lý người khác</li>
+                                <li>Thẩm mỹ cao về nghệ thuật, âm nhạc và ẩm thực</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-2">
+                            <h5 class="font-semibold mb-1">Chiến thuật thao túng:</h5>
+                            <div class="chart-container">
+                                <canvas id="hannibal-tactics-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-800 mb-2">Will Graham</h4>
+                        <p class="mb-2">Điều tra viên đặc biệt với khả năng đồng cảm phi thường, có thể hình dung tâm lý của kẻ giết người.</p>
+                        
+                        <div class="mt-4">
+                            <h5 class="font-semibold mb-1">Đặc điểm tâm lý:</h5>
+                            <ul class="list-disc pl-5 mb-3">
+                                <li>Khả năng đồng cảm cực cao</li>
+                                <li>Bất ổn tâm lý và ảo giác</li>
+                                <li>Khó khăn trong giao tiếp xã hội</li>
+                                <li>Trực giác sắc bén về tội phạm</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-2">
+                            <h5 class="font-semibold mb-1">Điểm yếu tâm lý:</h5>
+                            <div class="chart-container">
+                                <canvas id="will-vulnerability-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h4 class="font-bold mb-2">So sánh nhân vật</h4>
+                    <div class="chart-container">
+                        <canvas id="character-comparison-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab3-content" class="tab-content">
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Hệ thống quan hệ</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-bold mb-2">Mạng lưới nhân vật</h4>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="chart-container" style="height: 400px;">
+                            <canvas id="relationship-chart"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Biểu đồ thể hiện mối quan hệ giữa các nhân vật chính và mức độ ảnh hưởng của Hannibal đến họ.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold mb-2">Mức độ ảnh hưởng của Hannibal</h4>
+                        <div class="chart-container">
+                            <canvas id="influence-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold mb-2">Mức độ tin tưởng</h4>
+                        <div class="chart-container">
+                            <canvas id="trust-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h4 class="font-bold mb-2">Điều chỉnh mối quan hệ</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-1">Mức độ tin tưởng của Will đối với Hannibal:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="will-trust-level" min="0" max="100" value="70" class="w-full mr-2">
+                                <span id="will-trust-value" class="slider-value">70</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-1">Mức độ tin tưởng của Jack đối với Hannibal:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="jack-trust-level" min="0" max="100" value="60" class="w-full mr-2">
+                                <span id="jack-trust-value" class="slider-value">60</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-1">Mức độ tin tưởng của Alana đối với Hannibal:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="alana-trust-level" min="0" max="100" value="85" class="w-full mr-2">
+                                <span id="alana-trust-value" class="slider-value">85</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-1">Mức độ nghi ngờ của Bedelia:</label>
+                            <div class="flex items-center">
+                                <input type="range" id="bedelia-suspicion-level" min="0" max="100" value="75" class="w-full mr-2">
+                                <span id="bedelia-suspicion-value" class="slider-value">75</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-gray-100 rounded-lg">
+                        <h5 class="font-bold mb-2">Kết quả phân tích mối quan hệ:</h5>
+                        <p id="relationship-analysis">Hannibal đang có vị thế mạnh trong mạng lưới quan hệ. Will và Alana đặt nhiều niềm tin vào Hannibal, trong khi Bedelia có sự nghi ngờ nhất định. Jack Crawford vẫn chưa nhận ra mối nguy hiểm thực sự.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Kết luận và phân tích</h2>
+            
+            <div id="conclusion" class="mb-4">
+                <p class="mb-2">Dựa trên mô phỏng, chúng ta có thể thấy Hannibal Lecter sử dụng nhiều chiến thuật tâm lý phức tạp để thao túng Will Graham:</p>
+                <ul class="list-disc pl-5 mb-3">
+                    <li>Lợi dụng khả năng đồng cảm cao của Will để tạo sự phụ thuộc tâm lý</li>
+                    <li>Tạo ra môi trường "an toàn" giả tạo để Will cảm thấy được bảo vệ</li>
+                    <li>Khai thác sự bất ổn tâm lý và ảo giác của Will để làm suy yếu nhận thức</li>
+                    <li>Cô lập Will khỏi những người có thể giúp đỡ anh</li>
+                </ul>
+                <p>Mức độ thao túng càng cao, kết hợp với khả năng đồng cảm và bất ổn tâm lý của Will, càng làm tăng nguy cơ Will bị ảnh hưởng sâu sắc và có thể dẫn đến những hành vi nguy hiểm.</p>
+            </div>
+            
+            <div class="border-t pt-4">
+                <h3 class="font-bold mb-2">Bài học từ mô phỏng</h3>
+                <p>Mô phỏng này giúp chúng ta hiểu rõ hơn về cách thức một người có thể bị thao túng tâm lý, đặc biệt khi họ có những điểm yếu cụ thể. Trong trường hợp của Will Graham, khả năng đồng cảm cao - vốn là điểm mạnh trong công việc - lại trở thành điểm yếu khi đối mặt với một kẻ thao túng tâm lý tài tình như Hannibal Lecter.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Biến lưu trữ các biểu đồ
+        let charts = {};
+        
+        // Khởi tạo các biểu đồ khi trang được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Khởi tạo tab đầu tiên
+                initTab1Charts();
+                
+                // Xử lý sự kiện thay đổi tab
+                document.querySelectorAll('.tab-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Xóa lớp active từ tất cả các nút và nội dung tab
+                        document.querySelectorAll('.tab-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                            btn.classList.remove('bg-red-800');
+                            btn.classList.remove('text-white');
+                            btn.classList.add('bg-gray-300');
+                            btn.classList.add('text-gray-800');
+                        });
+                        
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        
+                        // Thêm lớp active cho nút và nội dung tab được chọn
+                        this.classList.add('active');
+                        this.classList.remove('bg-gray-300');
+                        this.classList.remove('text-gray-800');
+                        this.classList.add('bg-red-800');
+                        this.classList.add('text-white');
+                        
+                        const tabId = this.id.replace('-btn', '-content');
+                        document.getElementById(tabId).classList.add('active');
+                        
+                        // Khởi tạo biểu đồ cho tab được chọn
+                        if (tabId === 'tab1-content') {
+                            setTimeout(() => initTab1Charts(), 100);
+                        } else if (tabId === 'tab2-content') {
+                            setTimeout(() => initTab2Charts(), 100);
+                        } else if (tabId === 'tab3-content') {
+                            setTimeout(() => initTab3Charts(), 100);
+                        }
+                    });
+                });
+                
+                // Xử lý sự kiện thay đổi thanh trượt
+                document.querySelectorAll('input[type="range"]').forEach(slider => {
+                    slider.addEventListener('input', function() {
+                        // Cập nhật giá trị hiển thị
+                        const valueElement = document.getElementById(this.id + '-value');
+                        if (valueElement) {
+                            valueElement.textContent = this.value;
+                        }
+                        
+                        // Cập nhật mô phỏng nếu ở tab 1
+                        if (document.getElementById('tab1-content').classList.contains('active')) {
+                            updateSimulation();
+                        }
+                        
+                        // Cập nhật phân tích mối quan hệ nếu ở tab 3
+                        if (document.getElementById('tab3-content').classList.contains('active')) {
+                            updateRelationshipAnalysis();
+                        }
+                    });
+                });
+                
+                // Khởi tạo mô phỏng ban đầu
+                updateSimulation();
+                
+                // Xử lý sự kiện thay đổi kích thước cửa sổ
+                window.addEventListener('resize', function() {
+                    try {
+                        // Cập nhật lại tất cả các biểu đồ đang hiển thị
+                        if (document.getElementById('tab1-content').classList.contains('active')) {
+                            setTimeout(() => initTab1Charts(), 100);
+                        } else if (document.getElementById('tab2-content').classList.contains('active')) {
+                            setTimeout(() => initTab2Charts(), 100);
+                        } else if (document.getElementById('tab3-content').classList.contains('active')) {
+                            setTimeout(() => initTab3Charts(), 100);
+                        }
+                    } catch (error) {
+                        console.error("Lỗi khi xử lý sự kiện thay đổi kích thước:", error);
+                    }
+                });
+            } catch (error) {
+                console.error("Lỗi khi khởi tạo trang:", error);
+            }
+        });
+        
+        // Hàm khởi tạo biểu đồ cho tab 1
+        function initTab1Charts() {
+            try {
+                // Hủy các biểu đồ cũ nếu có
+                if (charts.mentalState) charts.mentalState.destroy();
+                if (charts.timeline) charts.timeline.destroy();
+                
+                // Biểu đồ trạng thái tâm lý
+                const mentalStateCtx = document.getElementById('mental-state-chart').getContext('2d');
+                charts.mentalState = new Chart(mentalStateCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Ổn định tâm lý', 'Nhận thức thực tế', 'Khả năng phán đoán', 'Kiểm soát hành vi', 'Sức khỏe tinh thần'],
+                        datasets: [{
+                            label: 'Will Graham',
+                            data: calculateMentalState(),
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        scales: {
+                            r: {
+                                min: 0,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 20
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Biểu đồ diễn biến tâm lý theo thời gian
+                const timelineCtx = document.getElementById('timeline-chart').getContext('2d');
+                charts.timeline = new Chart(timelineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Tập 1', 'Tập 2', 'Tập 3', 'Tập 4', 'Tập 5', 'Tập 6', 'Tập 7', 'Tập 8', 'Tập 9', 'Tập 10', 'Tập 11', 'Tập 12', 'Tập 13'],
+                        datasets: [{
+                            label: 'Ổn định tâm lý',
+                            data: calculateTimelineData('stability'),
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: 'Ảnh hưởng của Hannibal',
+                            data: calculateTimelineData('influence'),
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 2,
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Lỗi khi khởi tạo biểu đồ tab 1:", error);
+            }
+        }
+        
+        // Hàm khởi tạo biểu đồ cho tab 2
+        function initTab2Charts() {
+            try {
+                // Hủy các biểu đồ cũ nếu có
+                if (charts.hannibalTactics) charts.hannibalTactics.destroy();
+                if (charts.willVulnerability) charts.willVulnerability.destroy();
+                if (charts.characterComparison) charts.characterComparison.destroy();
+                
+                // Biểu đồ chiến thuật thao túng của Hannibal
+                const hannibalTacticsCtx = document.getElementById('hannibal-tactics-chart').getContext('2d');
+                charts.hannibalTactics = new Chart(hannibalTacticsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Tạo sự phụ thuộc tâm lý', 'Thao túng thông tin', 'Cô lập xã hội', 'Tạo ảo giác', 'Tạo niềm tin giả'],
+                        datasets: [{
+                            data: [30, 25, 15, 20, 10],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5
+                    }
+                });
+                
+                // Biểu đồ điểm yếu tâm lý của Will
+                const willVulnerabilityCtx = document.getElementById('will-vulnerability-chart').getContext('2d');
+                charts.willVulnerability = new Chart(willVulnerabilityCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Đồng cảm quá mức', 'Bất ổn tâm lý', 'Cô lập xã hội', 'Ảo giác', 'Thiếu niềm tin vào bản thân'],
+                        datasets: [{
+                            data: [35, 25, 15, 15, 10],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5
+                    }
+                });
+                
+                // Biểu đồ so sánh nhân vật
+                const characterComparisonCtx = document.getElementById('character-comparison-chart').getContext('2d');
+                charts.characterComparison = new Chart(characterComparisonCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Trí tuệ', 'Kiểm soát cảm xúc', 'Khả năng thao túng', 'Đồng cảm', 'Ổn định tâm lý'],
+                        datasets: [{
+                            label: 'Hannibal Lecter',
+                            data: [95, 90, 95, 40, 85],
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 2
+                        }, {
+                            label: 'Will Graham',
+                            data: [85, 40, 30, 95, 30],
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        scales: {
+                            r: {
+                                min: 0,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 20
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Lỗi khi khởi tạo biểu đồ tab 2:", error);
+            }
+        }
+        
+        // Hàm khởi tạo biểu đồ cho tab 3
+        function initTab3Charts() {
+            try {
+                // Hủy các biểu đồ cũ nếu có
+                if (charts.relationship) charts.relationship.destroy();
+                if (charts.influence) charts.influence.destroy();
+                if (charts.trust) charts.trust.destroy();
+                
+                // Biểu đồ mạng lưới quan hệ
+                const relationshipCtx = document.getElementById('relationship-chart').getContext('2d');
+                charts.relationship = new Chart(relationshipCtx, {
+                    type: 'bubble',
+                    data: {
+                        datasets: [{
+                            label: 'Hannibal Lecter',
+                            data: [{x: 50, y: 50, r: 20}],
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                        }, {
+                            label: 'Will Graham',
+                            data: [{x: 30, y: 60, r: calculateBubbleSize('will')}],
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                        }, {
+                            label: 'Jack Crawford',
+                            data: [{x: 70, y: 70, r: calculateBubbleSize('jack')}],
+                            backgroundColor: 'rgba(255, 206, 86, 0.7)'
+                        }, {
+                            label: 'Alana Bloom',
+                            data: [{x: 60, y: 30, r: calculateBubbleSize('alana')}],
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                        }, {
+                            label: 'Bedelia Du Maurier',
+                            data: [{x: 20, y: 30, r: calculateBubbleSize('bedelia')}],
+                            backgroundColor: 'rgba(153, 102, 255, 0.7)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        scales: {
+                            x: {
+                                min: 0,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Mức độ tương tác'
+                                }
+                            },
+                            y: {
+                                min: 0,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Mức độ ảnh hưởng'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Biểu đồ mức độ ảnh hưởng
+                const influenceCtx = document.getElementById('influence-chart').getContext('2d');
+                charts.influence = new Chart(influenceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Will Graham', 'Jack Crawford', 'Alana Bloom', 'Bedelia Du Maurier'],
+                        datasets: [{
+                            label: 'Mức độ ảnh hưởng của Hannibal',
+                            data: calculateInfluenceData(),
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+                
+                // Biểu đồ mức độ tin tưởng
+                const trustCtx = document.getElementById('trust-chart').getContext('2d');
+                charts.trust = new Chart(trustCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Will Graham', 'Jack Crawford', 'Alana Bloom', 'Bedelia Du Maurier'],
+                        datasets: [{
+                            label: 'Mức độ tin tưởng vào Hannibal',
+                            data: calculateTrustData(),
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+                
+                // Cập nhật phân tích mối quan hệ
+                updateRelationshipAnalysis();
+            } catch (error) {
+                console.error("Lỗi khi khởi tạo biểu đồ tab 3:", error);
+            }
+        }
+        
+        // Hàm tính toán trạng thái tâm lý dựa trên các thông số
+        function calculateMentalState() {
+            try {
+                const manipulationLevel = parseInt(document.getElementById('manipulation-level').value) || 50;
+                const empathyLevel = parseInt(document.getElementById('empathy-level').value) || 80;
+                const instabilityLevel = parseInt(document.getElementById('instability-level').value) || 60;
+                
+                // Tính toán các giá trị dựa trên thông số đầu vào
+                const stability = Math.max(0, 100 - (manipulationLevel * 0.5 + instabilityLevel * 0.5));
+                const reality = Math.max(0, 100 - (manipulationLevel * 0.6 + instabilityLevel * 0.4));
+                const judgment = Math.max(0, 100 - (manipulationLevel * 0.7 + instabilityLevel * 0.3));
+                const control = Math.max(0, 100 - (manipulationLevel * 0.4 + instabilityLevel * 0.6));
+                const mentalHealth = Math.max(0, 100 - (manipulationLevel * 0.3 + instabilityLevel * 0.7));
+                
+                return [stability, reality, judgment, control, mentalHealth];
+            } catch (error) {
+                console.error("Lỗi khi tính toán trạng thái tâm lý:", error);
+                return [50, 50, 50, 50, 50]; // Giá trị mặc định
+            }
+        }
+        
+        // Hàm tính toán dữ liệu diễn biến theo thời gian
+        function calculateTimelineData(type) {
+            try {
+                const manipulationLevel = parseInt(document.getElementById('manipulation-level').value) || 50;
+                const instabilityLevel = parseInt(document.getElementById('instability-level').value) || 60;
+                
+                // Tạo dữ liệu dựa trên loại biểu đồ
+                if (type === 'stability') {
+                    // Ổn định tâm lý giảm dần theo thời gian
+                    const baseStability = Math.max(0, 100 - instabilityLevel);
+                    return [
+                        baseStability,
+                        baseStability * 0.95,
+                        baseStability * 0.9,
+                        baseStability * 0.85,
+                        baseStability * 0.8,
+                        baseStability * 0.75,
+                        baseStability * 0.7,
+                        baseStability * 0.65,
+                        baseStability * 0.6,
+                        baseStability * 0.55,
+                        baseStability * 0.5,
+                        baseStability * 0.45,
+                        baseStability * 0.4
+                    ];
+                } else if (type === 'influence') {
+                    // Ảnh hưởng của Hannibal tăng dần theo thời gian
+                    const baseInfluence = manipulationLevel;
+                    return [
+                        baseInfluence * 0.4,
+                        baseInfluence * 0.45,
+                        baseInfluence * 0.5,
+                        baseInfluence * 0.55,
+                        baseInfluence * 0.6,
+                        baseInfluence * 0.65,
+                        baseInfluence * 0.7,
+                        baseInfluence * 0.75,
+                        baseInfluence * 0.8,
+                        baseInfluence * 0.85,
+                        baseInfluence * 0.9,
+                        baseInfluence * 0.95,
+                        baseInfluence
+                    ];
+                }
+                
+                return [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]; // Giá trị mặc định
+            } catch (error) {
+                console.error("Lỗi khi tính toán dữ liệu diễn biến theo thời gian:", error);
+                return [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]; // Giá trị mặc định
+            }
+        }
+        
+        // Hàm tính kích thước bong bóng cho biểu đồ mạng lưới quan hệ
+        function calculateBubbleSize(character) {
+            try {
+                if (character === 'will') {
+                    const trustLevel = parseInt(document.getElementById('will-trust-level').value) || 70;
+                    return 10 + (trustLevel / 10);
+                } else if (character === 'jack') {
+                    const trustLevel = parseInt(document.getElementById('jack-trust-level').value) || 60;
+                    return 10 + (trustLevel / 10);
+                } else if (character === 'alana') {
+                    const trustLevel = parseInt(document.getElementById('alana-trust-level').value) || 85;
+                    return 10 + (trustLevel / 10);
+                } else if (character === 'bedelia') {
+                    const suspicionLevel = parseInt(document.getElementById('bedelia-suspicion-level').value) || 75;
+                    return 10 + ((100 - suspicionLevel) / 10);
+                }
+                
+                return 15; // Giá trị mặc định
+            } catch (error) {
+                console.error("Lỗi khi tính toán kích thước bong bóng:", error);
+                return 15; // Giá trị mặc định
+            }
+        }
+        
+        // Hàm tính dữ liệu mức độ ảnh hưởng
+        function calculateInfluenceData() {
+            try {
+                const willTrust = parseInt(document.getElementById('will-trust-level').value) || 70;
+                const jackTrust = parseInt(document.getElementById('jack-trust-level').value) || 60;
+                const alanaTrust = parseInt(document.getElementById('alana-trust-level').value) || 85;
+                const bedeliaSuspicion = parseInt(document.getElementById('bedelia-suspicion-level').value) || 75;
+                
+                // Mức độ ảnh hưởng tỷ lệ thuận với mức độ tin tưởng và tỷ lệ nghịch với mức độ nghi ngờ
+                const willInfluence = willTrust * 0.9;
+                const jackInfluence = jackTrust * 0.8;
+                const alanaInfluence = alanaTrust * 0.9;
+                const bedeliaInfluence = Math.max(0, 100 - bedeliaSuspicion) * 0.7;
+                
+                return [willInfluence, jackInfluence, alanaInfluence, bedeliaInfluence];
+            } catch (error) {
+                console.error("Lỗi khi tính toán dữ liệu mức độ ảnh hưởng:", error);
+                return [60, 50, 75, 30]; // Giá trị mặc định
+            }
+        }
+        
+        // Hàm tính dữ liệu mức độ tin tưởng
+        function calculateTrustData() {
+            try {
+                const willTrust = parseInt(document.getElementById('will-trust-level').value) || 70;
+                const jackTrust = parseInt(document.getElementById('jack-trust-level').value) || 60;
+                const alanaTrust = parseInt(document.getElementById('alana-trust-level').value) || 85;
+                const bedeliaSuspicion = parseInt(document.getElementById('bedelia-suspicion-level').value) || 75;
+                
+                // Mức độ tin tưởng tỷ lệ nghịch với mức độ nghi ngờ
+                const bedeliaTrust = Math.max(0, 100 - bedeliaSuspicion);
+                
+                return [willTrust, jackTrust, alanaTrust, bedeliaTrust];
+            } catch (error) {
+                console.error("Lỗi khi tính toán dữ liệu mức độ tin tưởng:", error);
+                return [70, 60, 85, 25]; // Giá trị mặc định
+            }
+        }
+        
+        // Hàm cập nhật mô phỏng dựa trên các thông số
+        function updateSimulation() {
+            try {
+                const manipulationLevel = parseInt(document.getElementById('manipulation-level').value) || 50;
+                const empathyLevel = parseInt(document.getElementById('empathy-level').value) || 80;
+                const instabilityLevel = parseInt(document.getElementById('instability-level').value) || 60;
+                const suspicionLevel = parseInt(document.getElementById('suspicion-level').value) || 30;
+                
+                // Tính toán mức độ nguy hiểm
+                const dangerLevel = (manipulationLevel * 0.4 + empathyLevel * 0.2 + instabilityLevel * 0.3 - suspicionLevel * 0.1);
+                
+                // Cập nhật kết quả mô phỏng
+                let resultText = '';
+                let riskText = '';
+                
+                if (dangerLevel < 40) {
+                    resultText = 'Will Graham vẫn giữ được sự tỉnh táo và ít bị ảnh hưởng bởi Hannibal. Khả năng đồng cảm của anh được kiểm soát tốt và sự bất ổn tâm lý ở mức thấp.';
+                    riskText = 'Mức độ nguy hiểm: Thấp';
+                } else if (dangerLevel < 60) {
+                    resultText = 'Will Graham đang dần bị ảnh hưởng bởi sự thao túng của Hannibal. Khả năng đồng cảm cao khiến anh dễ bị tổn thương trước những chiến thuật tâm lý của Hannibal.';
+                    riskText = 'Mức độ nguy hiểm: Trung bình';
+                } else if (dangerLevel < 80) {
+                    resultText = 'Will Graham đang bị ảnh hưởng nghiêm trọng bởi Hannibal. Sự bất ổn tâm lý kết hợp với khả năng đồng cảm cao khiến anh dễ dàng bị thao túng và có thể dẫn đến những hành vi nguy hiểm.';
+                    riskText = 'Mức độ nguy hiểm: Trung bình cao';
+                } else {
+                    resultText = 'Will Graham đã gần như hoàn toàn bị Hannibal thao túng. Ranh giới giữa nhận thức của anh và ảnh hưởng của Hannibal đã trở nên mờ nhạt. Nguy cơ Will trở thành công cụ của Hannibal rất cao.';
+                    riskText = 'Mức độ nguy hiểm: Rất cao';
+                }
+                
+                document.getElementById('simulation-result').textContent = resultText;
+                document.getElementById('risk-level').textContent = riskText;
+                
+                // Cập nhật biểu đồ nếu đã được khởi tạo
+                if (charts.mentalState) {
+                    charts.mentalState.data.datasets[0].data = calculateMentalState();
+                    charts.mentalState.update();
+                }
+                
+                if (charts.timeline) {
+                    charts.timeline.data.datasets[0].data = calculateTimelineData('stability');
+                    charts.timeline.data.datasets[1].data = calculateTimelineData('influence');
+                    charts.timeline.update();
+                }
+            } catch (error) {
+                console.error("Lỗi khi cập nhật mô phỏng:", error);
+            }
+        }
+        
+        // Hàm cập nhật phân tích mối quan hệ
+        function updateRelationshipAnalysis() {
+            try {
+                const willTrust = parseInt(document.getElementById('will-trust-level').value) || 70;
+                const jackTrust = parseInt(document.getElementById('jack-trust-level').value) || 60;
+                const alanaTrust = parseInt(document.getElementById('alana-trust-level').value) || 85;
+                const bedeliaSuspicion = parseInt(document.getElementById('bedelia-suspicion-level').value) || 75;
+                
+                let analysisText = '';
+                
+                if (willTrust > 70 && alanaTrust > 70) {
+                    analysisText = 'Hannibal đang có vị thế rất mạnh trong mạng lưới quan hệ. Cả Will và Alana đều đặt nhiều niềm tin vào Hannibal, tạo điều kiện thuận lợi cho việc thao túng của ông ta. ';
+                } else if (willTrust > 70) {
+                    analysisText = 'Will Graham đặt nhiều niềm tin vào Hannibal, khiến anh trở thành mục tiêu dễ dàng cho sự thao túng. ';
+                } else if (alanaTrust > 70) {
+                    analysisText = 'Alana Bloom có niềm tin cao vào Hannibal, tạo điều kiện cho ông ta có thể sử dụng cô như một lá chắn hoặc công cụ. ';
+                } else {
+                    analysisText = 'Cả Will và Alana đều có sự dè chừng nhất định với Hannibal, giúp họ ít bị ảnh hưởng hơn bởi sự thao túng. ';
+                }
+                
+                if (jackTrust > 60) {
+                    analysisText += 'Jack Crawford tin tưởng Hannibal ở mức độ đáng kể, khiến ông không nhận ra mối nguy hiểm thực sự. ';
+                } else {
+                    analysisText += 'Jack Crawford có sự dè chừng với Hannibal, giúp ông có thể nhận ra một số dấu hiệu bất thường. ';
+                }
+                
+                if (bedeliaSuspicion > 70) {
+                    analysisText += 'Bedelia có sự nghi ngờ cao đối với Hannibal, khiến bà trở thành người duy nhất có thể nhìn thấu một phần bản chất thật của ông ta.';
+                } else {
+                    analysisText += 'Bedelia không đủ nghi ngờ đối với Hannibal, khiến bà cũng có nguy cơ bị thao túng.';
+                }
+                
+                document.getElementById('relationship-analysis').textContent = analysisText;
+                
+                // Cập nhật biểu đồ nếu đã được khởi tạo
+                if (charts.relationship) {
+                    charts.relationship.data.datasets[1].data[0].r = calculateBubbleSize('will');
+                    charts.relationship.data.datasets[2].data[0].r = calculateBubbleSize('jack');
+                    charts.relationship.data.datasets[3].data[0].r = calculateBubbleSize('alana');
+                    charts.relationship.data.datasets[4].data[0].r = calculateBubbleSize('bedelia');
+                    charts.relationship.update();
+                }
+                
+                if (charts.influence) {
+                    charts.influence.data.datasets[0].data = calculateInfluenceData();
+                    charts.influence.update();
+                }
+                
+                if (charts.trust) {
+                    charts.trust.data.datasets[0].data = calculateTrustData();
+                    charts.trust.update();
+                }
+            } catch (error) {
+                console.error("Lỗi khi cập nhật phân tích mối quan hệ:", error);
+            }
+        }
+    </script>
+<script>window.parent.postMessage({ action: "ready" }, "*"); 
+ 
+window.console = new Proxy(console, {
+  get(target, prop) {
+    if (['log', 'warn', 'error'].includes(prop)) {
+      return new Proxy(target[prop], {
+        apply(fn, thisArg, args) {
+          fn.apply(thisArg, args);
+          window.parent.postMessage({ action: 'console', 
+            type: prop, 
+            args: args.map((arg) => {
+              try {
+                return JSON.stringify(arg).replace(/^["']|["']$/g, '');
+              } catch (e) {
+                return arg;
+              }
+            }) 
+          }, '*');
+        }
+      });
+    }
+    return target[prop];
+  }
+});
+</script></body>
+</html>
